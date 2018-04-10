@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>留言时间胶囊</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+    <style type="text/css">
+        .container {
+            width: 650px;
+            margin-top: 60px;
+        }
+
+        #app {
+            margin-top: 60px;
+            margin: 0 auto;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e3e3e3;
+        }
+
+        .messages-header {
+            line-height: 1;
+            color: #666;
+            padding: 20px 0 6px;
+            border-bottom: 1px solid #eee;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .messages ul {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <style type="text/css">
+        .message-item {
+            color: #565655;
+            padding-top: 14px;
+            padding-bottom: 10px;
+            list-style-type: none;
+        }
+
+        .message-item .message-info {
+            position: relative;
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .message-item .message-main {
+            overflow: hidden;
+        }
+
+        .message-item .message-time {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 13px;
+            transition: all .2s ease;
+        }
+
+        .message-item .message-text {
+            line-height: 1.4;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            float: left;
+            margin-right: 12px;
+        }
+
+    </style>
+    <style type="text/css">
+        .v-avatar {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            font: 300 normal 24px/48px sans-serif;
+        }
+
+        .v-avatar .v-avatar-text {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container"><h1 class="title">留言时间胶囊</h1>
+        <form method="POST" action="/">
+            <div class="form-group"><textarea class="form-control" placeholder="Say something..." rows="5"
+                                              name="time_capsule"></textarea>
+            </div>
+            <button class="btn btn-default">Submit</button>
+        </form>
+        <div class="messages-header">{{ time_capsule_list.count() }} messages</div>
+        <div class="messages">
+            <ul tansition="fade">
+
+                {% if time_capsule_list.count() == 0 %}
+                    <p class="no-msg"> -- 还没有任何留言 -- </p>
+                {% endif %}
+                {% for capsule in time_capsule_list %}
+                    <li class="message-item">
+                    <span class="avatar">
+                    <span class="v-avatar" aria-label="{{ capsule.username }}">
+                        <a href="{{ capsule.html_url }}">
+                        <img src="{{ capsule.avatar_url }}" width="100%" height="100%" alt="">
+
+                        </a>
+                    </span>
+                    </span>
+                        <div class="message-main">
+                            <div class="message-info"><span>{{ capsule.username }}</span>
+                                <div class="message-time">
+                                    <time datetime="{{ capsule.datetime }}">{{ capsule.datetime }}</time>
+                                </div>
+                            </div>
+                            {% if capsule.time_capsule %}
+                                <div class="message-text">{{ capsule.time_capsule }}</div>
+                            {% else %}
+                                <div class="message-text">&nbsp;</div>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+                <hr>
+            </ul>
+            <nav>
+                <ul class="pager">
+                    {% if page != 1 %}
+                        <li><a href="{{ url_for("index", page=page-1) }}">Previous</a></li>
+                    {% endif %}
+                    {% if page < page_count %}
+                        <li><a href="{{ url_for("index", page=page+1) }}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Github 留言咖啡馆</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div class="container">
+            <h1 class="title">Github 留言咖啡馆</h1>
+            <form action="/" method="post">
+                <div class="input-group talk">
+                    <input type="text" class="form-control" name="geek_wisdom">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">发表</button>
+                    </span>
+                </div>
+            </form>
+            <div class="chat">
+                <div class="scroll">
+                {% if wisdom_list.count() == 0  %}
+                <p class="no-msg"> -- 还没有任何留言 -- </p>
+                {% endif %}
+                {% for wisdom in wisdom_list %}
+                <div class="message">
+                    <div class="user">
+                        <div class="portrait"><a href="{{ wisdom.html_url }}" target="_blank"><img src="{{ wisdom.avatar_url }}" alt=""></a>
+                        </div>
+                    </div>
+                    <div class="msg">
+                        <p class="bubble bubble-border">{{ wisdom.geek_wisdom }}<span class="time">{{ wisdom.datetime }}</span></p>
+                    </div>                    
+                </div>                
+                {% endfor %}
+                <nav>
+                    <ul class="pager">
+                    {% if page != 1 %}
+                    <li><a href="{{ url_for("index", page=page-1) }}">Previous</a></li>
+                    {% endif %}
+                    {% if page < page_count %}
+                    <li><a href="{{ url_for("index", page=page+1) }}">Next</a></li>
+                    {% endif %}
+                    </ul>
+                </nav>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+           <a href="http://www.freepik.com/free-photos-vectors/background">Background photograph designed by Onlyyouqj - Freepik.com</a> 
+        </div>
+    </div>
+</body>
+
+</html>
